@@ -1,0 +1,56 @@
+# https://github.com/peter-evans/swagger-github-pages/blob/master/.github/workflows/update-swagger.yml
+name: Update Swagger UI
+on:
+  push:
+    branches: [issue/#1]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+jobs:
+  swgger-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      swagger_version: v5.21.0
+      openapi_yaml: "openapi.yaml"
+      target_dir: docs
+    steps:
+      - uses: actions/checkout@v4
+      # - name: get tag name
+      #   id: get-tag-name
+      #   run: echo "tag-name=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+      - name: echo branch name
+        run: echo ${{ github.ref_name }}
+      - name: install redocly
+        run: npm install @redocly/cli
+      - name: combine openapi schema
+        run: npx redocly bundle openapi/openapi.yaml --output=./$openapi_yaml
+      - name: copy openapi.yaml
+        run: cp -n openapi/openapi.yaml $target_dir
+      - name: clone swagger ui
+        # https://docs.github.com/ja/rest/repos/contents?apiVersion=2022-11-28#download-a-repository-archive-tar
+        run: |
+          curl -sL -o $swagger_version https://api.github.com/repos/swagger-api/swagger-ui/tarball/$swagger_version
+          tar -xzf $swagger_version --strip-components=1 $(tar -tzf $swagger_version | head -1 | cut -f1 -d"/")/dist
+          rm $swagger_version
+          sed -i "s|https://petstore.swagger.io/v2/swagger.json|$openapi_yaml|g" dist/swagger-initializer.js
+          sed -i "s|href=\"./|href=\"$target_dir/|g" $target_dir/index.html
+          sed -i "s|src=\"./|src=\"$target_dir/|g" $target_dir/index.html
+          sed -i "s|href=\"index|href=\"$target_dir/index|g" $target_dir/index.html
+          mv dist/* $target_dir
+          mv $openapi_yaml $target_dir
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "docs"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

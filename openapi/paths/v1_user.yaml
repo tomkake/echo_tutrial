@@ -7,7 +7,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: ../components/parameters/query/users/user.yaml
+          $ref: ../components/parameters/query/users/user_info.yaml
   responses:
     "200":
       description: OK
