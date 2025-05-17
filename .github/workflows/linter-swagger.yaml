@@ -9,6 +9,6 @@ jobs:
       - name: install redocly
         run: npm install @redocly/cli
       - name: combine openapi schema
-        run: npx redocly bundle openapi/openapi.yaml --output=./$openapi_yaml
+        run: npx redocly bundle openapi/openapi.yaml --output=./openapi.yaml
       - name: copy openapi.yaml
         run: npx redocly lint openapi.yaml
