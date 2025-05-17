@@ -1,0 +1,14 @@
+name: deploy swagger UI
+on: push
+
+jobs:
+  swagger-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: install redocly
+        run: npm install @redocly/cli
+      - name: combine openapi schema
+        run: npx redocly bundle openapi/openapi.yaml --output=./openapi.yaml
+      - name: copy openapi.yaml
+        run: npx redocly lint openapi.yaml
