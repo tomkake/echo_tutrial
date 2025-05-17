@@ -2,7 +2,8 @@
 name: Update Swagger UI
 on:
   push:
-    branches: [issue/#1]
+    tags:
+      - "v*"
 permissions:
   contents: read
   pages: write
@@ -22,11 +23,6 @@ jobs:
       target_dir: docs
     steps:
       - uses: actions/checkout@v4
-      # - name: get tag name
-      #   id: get-tag-name
-      #   run: echo "tag-name=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
-      - name: echo branch name
-        run: echo ${{ github.ref_name }}
       - name: install redocly
         run: npm install @redocly/cli
       - name: combine openapi schema
