@@ -1,0 +1,46 @@
+BadRequest:
+  description: リクエストが不正です
+  content:
+    application/json:
+      schema:
+        allOf:
+          - $ref: ./error.yaml
+          - example:
+              code: "INVALID_REQUEST"
+              message: "リクエストが不正です"
+              details:
+                - field: "email"
+                  message: "メールアドレスの形式が不正です"
+
+Unauthorized:
+  description: 認証が必要です
+  content:
+    application/json:
+      schema:
+        allOf:
+          - $ref: ./error.yaml
+          - example:
+              code: "UNAUTHORIZED"
+              message: "認証が必要です"
+
+Forbidden:
+  description: アクセス権限がありません
+  content:
+    application/json:
+      schema:
+        allOf:
+          - $ref: ./error.yaml
+          - example:
+              code: "FORBIDDEN"
+              message: "アクセス権限がありません"
+
+NotFound:
+  description: リソースが見つかりません
+  content:
+    application/json:
+      schema:
+        allOf:
+          - $ref: ./error.yaml
+          - example:
+              code: "NOT_FOUND"
+              message: "指定されたユーザーが見つかりません"

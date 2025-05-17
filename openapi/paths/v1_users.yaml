@@ -1,0 +1,22 @@
+get:
+  tags: ["Users"]
+  summary: "ユーザー一覧取得"
+  operationId: getUsers
+  description: "登録されているユーザーの一覧を取得します。"
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../components/schemas/users/user.yaml
+    "400":
+      $ref: ../components/schemas/errors/client_errors.yaml#/BadRequest
+    "403":
+      $ref: ../components/schemas/errors/client_errors.yaml#/Forbidden
+    "500":
+      $ref: ../components/schemas/errors/server_errors.yaml#/InternalServerError
+    "503":
+      $ref: ../components/schemas/errors/server_errors.yaml#/ServiceUnavailable

@@ -1,0 +1,7 @@
+type: object
+properties:
+  name:
+    type: string
+    description: ユーザーの名前
+required:
+  - name

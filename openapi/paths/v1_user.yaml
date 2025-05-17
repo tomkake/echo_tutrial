@@ -1,0 +1,27 @@
+post:
+  tags: ["Users"]
+  operationId: post-user
+  summary: "ユーザー登録"
+  description: "ユーザーを登録します。"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/parameters/query/users/user.yaml
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../components/schemas/users/user.yaml
+    "400":
+      $ref: ../components/schemas/errors/client_errors.yaml#/BadRequest
+    "403":
+      $ref: ../components/schemas/errors/client_errors.yaml#/Forbidden
+    "500":
+      $ref: ../components/schemas/errors/server_errors.yaml#/InternalServerError
+    "503":
+      $ref: ../components/schemas/errors/server_errors.yaml#/ServiceUnavailable

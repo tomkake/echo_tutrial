@@ -1,0 +1,20 @@
+openapi: 3.1.0
+info:
+  version: "0.0.1"
+  title: "Swagger"
+  description: "echo tutrial API definition book"
+  license:
+    name: ""
+    url: "http://localhost:8008"
+servers:
+  - url: https://api.example.com
+    description: Production server
+security:
+  - {}
+paths:
+  /v1/users:
+    $ref: ./paths/v1_users.yaml
+  /v1/user:
+    $ref: ./paths/v1_user.yaml
+  /v1/users/{user_id}:
+    $ref: ./paths/v1_users_{user_id}.yaml

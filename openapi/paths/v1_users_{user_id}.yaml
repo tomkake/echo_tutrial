@@ -1,0 +1,47 @@
+patch:
+  tags: ["Users"]
+  summary: "ユーザー情報更新"
+  operationId: path-user
+  description: "登録されているユーザーの情報を更新します。"
+  parameters:
+    $ref: ../components/parameters/path/user_id_required.yaml
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: ../components/schemas/users/user.yaml
+    "400":
+      $ref: ../components/schemas/errors/client_errors.yaml#/BadRequest
+    "403":
+      $ref: ../components/schemas/errors/client_errors.yaml#/Forbidden
+    "404":
+      $ref: ../components/schemas/errors/client_errors.yaml#/NotFound
+    "500":
+      $ref: ../components/schemas/errors/server_errors.yaml#/InternalServerError
+    "503":
+      $ref: ../components/schemas/errors/server_errors.yaml#/ServiceUnavailable
+
+delete:
+  tags: ["Users"]
+  summary: "ユーザー削除"
+  operationId: delete-user
+  description: "登録されているユーザーを削除します。"
+  parameters:
+    $ref: ../components/parameters/path/user_id_required.yaml
+  responses:
+    "200":
+      description: OK
+      content: {}
+    "400":
+      $ref: ../components/schemas/errors/client_errors.yaml#/BadRequest
+    "403":
+      $ref: ../components/schemas/errors/client_errors.yaml#/Forbidden
+    "404":
+      $ref: ../components/schemas/errors/client_errors.yaml#/NotFound
+    "500":
+      $ref: ../components/schemas/errors/server_errors.yaml#/InternalServerError
+    "503":
+      $ref: ../components/schemas/errors/server_errors.yaml#/ServiceUnavailable
