@@ -11,3 +11,9 @@ redocly lint openapi/openapi.yaml
 ```bash
 redocly preview-docs openapi/openapi.yaml
 ```
+
+# openapi
+
+```bash
+redocly bundle openapi/openapi.yaml --output=./combined_openapi.yaml
+```
