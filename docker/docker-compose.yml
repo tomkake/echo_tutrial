@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    healthcheck:  
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]  
+      interval: 10s  
+      timeout: 5s  
+      retries: 5  
+    networks:
+      - db
+
+  migration:
+    image: golang:1.23.9-alpine3.21
+    container_name: migration
+    volumes:
+      - ${PWD}/database:/database
+    working_dir: /app
+    environment:
+     MYSQL_USER: root
+     MYSQL_PASSWORD: password
+     MYSQL_HOST: mysql
+     MYSQL_PORT: 3306
+     MYSQL_DATABASE: mydb
+    command: >
+      sh -c "go install github.com/rubenv/sql-migrate/...@v1.8.0 &&
+             cd /database &&
+             sql-migrate up"
+    depends_on:  
+      mysql:  
+        condition: service_healthy
+    networks:
+      - db
+
+volumes:
+  mysql_data:
+
+networks:
+  db:
+    driver: bridge

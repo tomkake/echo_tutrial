@@ -1,0 +1,33 @@
+name: db migration
+on: push
+
+jobs:
+  db-migration:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ vars.MYSQL_ROOT_PASSWORD  }}
+          MYSQL_DATABASE: mydb
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
+    env:
+      go-version: 1.23.9
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ${{ vars.MYSQL_PASSWORD  }}
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: mydb
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.9"
+      - run: go version
+      - name: sql-migrate install
+        run: go install github.com/rubenv/sql-migrate/...@v1.8.0
+      - name: sql-migrate up --dryrun
+        run: cd database/ && sql-migrate up --dryrun
