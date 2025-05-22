@@ -1,0 +1,27 @@
+version: "2" # sqlc version, adjust if a specific sqlc is installed
+sql:
+  - engine: "mysql"
+    schema: "../../../database/migrations" # Path to migrations
+    queries: "./queries"                  # Path to SQL query files
+    gen:
+      go:
+        package: "db" # Go package for generated code
+        out: "./sqlc" # Output directory for generated code
+        # Emit exact struct fields that simplify working with nulls.
+        emit_exact_table_names: false 
+        emit_interface: true # Generate a Querier interface
+        emit_json_tags: true # Add json tags to generated structs
+        json_tags_case_style: "camel" 
+        overrides:
+          - db_type: "binary" # Assuming binary(16) is seen as 'binary' by sqlc for MySQL
+            go_type: 
+              import: "github.com/google/uuid"
+              type: "UUID"
+          - db_type: "varbinary" # Just in case it's seen as varbinary
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+          - column: "users.id" # More specific override for users.id
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
