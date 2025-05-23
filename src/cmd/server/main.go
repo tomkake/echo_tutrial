@@ -7,6 +7,7 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql" // MySQL driver
+	"github.com/joho/godotenv"         // For loading .env files
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -18,6 +19,14 @@ import (
 )
 
 func main() {
+	// Load .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Info: .env file not found, using environment variables from system")
+	} else {
+		log.Println("Info: .env file loaded successfully")
+	}
+
 	// Database Connection
 	mysqlUser := os.Getenv("MYSQL_USER")
 	if mysqlUser == "" {
